@@ -1,62 +1,64 @@
-# Step 1: Import all the libraries
 from flask import Flask, jsonify
 import requests
 import pandas as pd
 from flask_cors import CORS
 
-# Step 2: Create the Flask app and allow CORS
 app = Flask(__name__)
 CORS(app)
 
-# Step 3: Upgrade the data-getting function
-# It now takes a 'country_code' argument (like "IND", "USA", "CHN")
-def get_gdp_data(country_code):
-    
-    # --- THIS IS THE MAIN CHANGE ---
-    # We use an f-string to build the URL with the new country_code
-    api_url = f"http://api.worldbank.org/v2/country/{country_code}/indicator/NY.GDP.MKTP.CD?date=2012:2022&format=json"
+# This is our new "recipe book" (dictionary)
+# It maps simple names to the real World Bank indicator codes
+INDICATOR_MAP = {
+    "gdp": "NY.GDP.MKTP.CD",          # GDP (Current US$)
+    "inflation": "FP.CPI.TOTL.ZG",    # Inflation, consumer prices (annual %)
+    "unemployment": "SL.UEM.TOTL.ZS"  # Unemployment, total (% of total labor force)
+}
 
-    print(f"Fetching data for {country_code} from World Bank API...")
+# We rename 'gdp' to 'value' for generic use
+def clean_data_from_world_bank(data_list):
+    df = pd.DataFrame(data_list)
+    clean_df = df[['date', 'value']]
+    clean_df = clean_df.rename(columns={"value": "value"}) # Keep it generic
+    # Drop rows where 'value' is None (missing data)
+    clean_df = clean_df.dropna(subset=['value'])
+    return clean_df.to_dict('records')
+
+def get_indicator_data(country_code, indicator):
+    # Look up the real indicator code from our map
+    indicator_code = INDICATOR_MAP.get(indicator)
     
+    # If the indicator isn't in our map, return an error
+    if not indicator_code:
+        return {"error": "Invalid indicator"}, 400
+
+    api_url = f"http://api.worldbank.org/v2/country/{country_code}/indicator/{indicator_code}?date=2000:2022&format=json"
+    
+    print(f"Fetching {indicator} for {country_code}...")
+
     try:
         response = requests.get(api_url)
         data = response.json()
         
-        data_list = data[1]
-        df = pd.DataFrame(data_list)
-
-        # Clean the table
-        clean_df = df[['date', 'value']]
-        clean_df = clean_df.rename(columns={"value": "gdp"})
-        
-        data_json = clean_df.to_dict('records')
-        
-        return data_json
+        # data[1] holds the list of data points
+        if data and len(data) > 1 and data[1]:
+            return clean_data_from_world_bank(data[1]), 200
+        else:
+            # No data found for that country/indicator combo
+            return [], 200
 
     except Exception as e:
-        # If a country's data is missing, the API returns an error.
-        # We'll catch it and return an empty list.
-        print(f"Error fetching data for {country_code}: {e}")
-        return [] # Return empty data instead of crashing
+        print(f"Error fetching data: {e}")
+        return {"error": f"Failed to fetch data: {e}"}, 500
 
-# Step 4: Define our routes
 @app.route("/")
 def home():
-    return "Hello! My Flask server is running and ready to serve data for any country."
+    return "Economic Dashboard API is running."
 
-# --- THIS IS THE MAIN CHANGE ---
-# The route is now "dynamic". The <country_code> part is a variable
-# that gets passed to our function.
-@app.route("/api/gdp/<country_code>")
-def api_gdp_data(country_code):
-    print(f"API request received for {country_code}...")
-    
-    # 1. Call our function with the specific country_code
-    data = get_gdp_data(country_code)
-    
-    # 2. Send the data back
-    return jsonify(data)
+# This is our new, all-in-one, dynamic route!
+@app.route("/api/data/<indicator>/<country_code>")
+def api_get_data(indicator, country_code):
+    data, status_code = get_indicator_data(country_code.upper(), indicator.lower())
+    return jsonify(data), status_code
 
-# Step 5: Run the app
 if __name__ == "__main__":
     app.run(debug=True)

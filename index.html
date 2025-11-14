@@ -18,38 +18,20 @@
     <div id="map"></div>
     
     <div class="sidebar">
-      <h2>Macroeconomic Indicators</h2>
-      
-      <div class="indicator">
-        <label for="gdp">GDP</label>
-        <select id="gdp">
-          <option value="gdp_2020">GDP 2020</option>
-          <option value="gdp_2021">GDP 2021</option>
-          <option value="gdp_2022">GDP 2022</option>
-        </select>
-      </div>
-      
-      <div class="indicator">
-        <label for="inflation">Inflation</label>
-        <select id="inflation">
-          <option value="inflation_2020">Inflation 2020</option>
-          <option value="inflation_2021">Inflation 2021</option>
-          <option value="inflation_2022">Inflation 2022</option>
-        </select>
-      </div>
-      
-      <div class="indicator">
-        <label for="unemployment">Unemployment</label>
-        <select id="unemployment">
-          <option value="unemployment_2020">Unemployment 2020</option>
-          <option value="unemployment_2021">Unemployment 2021</option>
-          <option value="unemployment_2022">Unemployment 2022</option>
-        </select>
-      </div>
+          <h2>Macroeconomic Indicators</h2>
+          
+          <div class="indicator">
+            <label for="indicator-select">Select Indicator:</label>
+            <select id="indicator-select">
+              <option value="gdp" selected>GDP (Current US$)</option>
+              <option value="inflation">Inflation (Annual %)</option>
+              <option value="unemployment">Unemployment (%)</option>
+            </select>
+          </div>
 
-      <div id="plotly-chart"></div>
+          <div id="plotly-chart"></div>
 
-    </div>
+        </div>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
