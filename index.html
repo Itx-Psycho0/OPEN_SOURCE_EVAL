@@ -3,46 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive World Map with D3.js</title>
+  <title>Global Economic Trends Dashboard</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 20px;
-      background-color: #f4f4f4;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+      display: flex;
+    }
+    header {
+      background-color: #1a1a2e;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 500;
+    }
+    main {
+      display: flex;
+      margin-top: 80px;
+      flex: 1;
     }
     #map {
-      width: 60%;
-      height: 550px;
+      width: 70%;
+      height: calc(100vh - 80px);
       background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar {
+      width: 30%;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      color: #1a1a2e;
+    }
+    .indicator {
+      margin-bottom: 15px;
+    }
+    .indicator label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .indicator select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
     }
     .country {
-      fill: #ccc;
-      stroke: #fff;
+      fill: #e0e0e0;
+      stroke: #ccc;
       stroke-width: 0.5px;
+      transition: fill 0.3s ease;
     }
     .country:hover {
       fill: #4edcff;
+      cursor: pointer;
     }
     .tooltip {
       position: absolute;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.85);
       color: #fff;
-      padding: 5px 10px;
-      border-radius: 4px;
+      padding: 8px 12px;
+      border-radius: 6px;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s ease;
+      font-size: 14px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    footer {
+      text-align: center;
+      padding: 10px 0;
+      color: #666;
+      font-size: 12px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #e0e0e0;
+      width: 100%;
+      position: fixed;
+      bottom: 0;
     }
   </style>
 </head>
 <body>
-  <h1>Global Economic Trends Dashboard</h1>
-  <div id="map"></div>
+  <header>
+    <h1>Global Economic Trends Dashboard</h1>
+  </header>
+  <main>
+    <div id="map"></div>
+    <div class="sidebar">
+      <h2>Macroeconomic Indicators</h2>
+      <div class="indicator">
+        <label for="gdp">GDP</label>
+        <select id="gdp">
+          <option value="gdp_2020">GDP 2020</option>
+          <option value="gdp_2021">GDP 2021</option>
+          <option value="gdp_2022">GDP 2022</option>
+        </select>
+      </div>
+      <div class="indicator">
+        <label for="inflation">Inflation</label>
+        <select id="inflation">
+          <option value="inflation_2020">Inflation 2020</option>
+          <option value="inflation_2021">Inflation 2021</option>
+          <option value="inflation_2022">Inflation 2022</option>
+        </select>
+      </div>
+      <div class="indicator">
+        <label for="unemployment">Unemployment</label>
+        <select id="unemployment">
+          <option value="unemployment_2020">Unemployment 2020</option>
+          <option value="unemployment_2021">Unemployment 2021</option>
+          <option value="unemployment_2022">Unemployment 2022</option>
+        </select>
+      </div>
+    </div>
+  </main>
   <div id="tooltip" class="tooltip"></div>
+  <footer>
+    Data provided by World GeoJSON project. Map visualization powered by D3.js.
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
