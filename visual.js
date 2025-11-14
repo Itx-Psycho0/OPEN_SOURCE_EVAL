@@ -1,128 +1,193 @@
-// --- PART 1: D3 MAP CODE ---
+// --- PART 1: GLOBAL "STATE" VARIABLES ---
+let selectedCountries = []; // We now use an array
+let currentIndicator = "gdp";
+let currentIndicatorName = "GDP";
+let currentChartType = "line"; // 'line', 'bar', or 'pie'
 
-const width = 960;
-const height = 600;
-const projection = d3.geoNaturalEarth1()
-  .scale(width / 2 / Math.PI)
-  .translate([width / 2, height / 2]);
-const path = d3.geoPath().projection(projection);
-const svg = d3.select("#map").append("svg")
-  .attr("width", width)
-  .attr("height", height);
-const tooltip = d3.select("#tooltip");
-
-// --- PART 2: GLOBAL "STATE" VARIABLES ---
-// We need to remember what the user has selected
-
-let currentCountryCode = "IND"; // Default to India
-let currentCountryName = "India";
-let currentIndicator = "gdp";   // Default to GDP
-let currentIndicatorName = "GDP (Current US$)";
-
-// This object helps us set the chart's Y-axis label
+// Y-axis labels
 const Y_AXIS_LABELS = {
   gdp: "GDP (Current US$)",
   inflation: "Inflation (Annual %)",
   unemployment: "Unemployment (%)"
 };
 
-// --- PART 3: THE CHART UPDATE FUNCTION ---
+// --- PART 2: DOM ELEMENT REFERENCES ---
+const chartPanel = document.getElementById('chart-panel');
+const closePanelButton = document.getElementById('close-panel-btn');
+const indicatorSelect = document.getElementById('indicator-select');
+const chartTypeSelect = document.getElementById('chart-type-select'); // New
+const clearButton = document.getElementById('clear-selection-btn');   // New
+const tooltip = d3.select("#tooltip");
 
-async function updateChart(countryCode, countryName, indicator, indicatorName) {
-  
-  console.log(`Attempting to update chart for: ${countryName} (${countryCode}), Indicator: ${indicator}`);
+// --- PART 3: THE (NEW) CHART UPDATE FUNCTION ---
+
+async function updateChart() {
+  // If no countries are selected, hide the panel and stop
+  if (selectedCountries.length === 0) {
+    chartPanel.classList.remove('visible');
+    return;
+  }
+
   const chartDiv = document.getElementById('plotly-chart');
-  chartDiv.innerHTML = `<h2>Loading ${indicatorName} data for ${countryName}...</h2>`;
+  chartDiv.innerHTML = `<h2>Loading ${currentIndicatorName} data for ${selectedCountries.length} countries...</h2>`;
 
-  // Build the new dynamic API URL
-  const apiUrl = `http://127.0.0.1:5000/api/data/${indicator}/${countryCode}`;
+  // --- A: Pie Chart Logic (Special Case) ---
+  if (currentChartType === 'pie') {
+    chartDiv.innerHTML = `<h2>Loading latest ${currentIndicatorName} data...</h2>`;
+    
+    // We only want to compare the *latest* value for each country
+    let pieLabels = [];
+    let pieValues = [];
+    
+    // Create an array of fetch promises
+    const promises = selectedCountries.map(async (country) => {
+      const apiUrl = `http://127.0.0.1:5000/api/data/${currentIndicator}/${country.code}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      if (data.length > 0) {
+        // Get the last item (most recent year) that has a value
+        const latestData = data.reverse().find(d => d.value !== null);
+        if (latestData) {
+          pieLabels.push(country.name);
+          pieValues.push(latestData.value);
+        }
+      }
+    });
 
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-
-    if (data.length === 0) {
-      chartDiv.innerHTML = `<h2>Sorry, no ${indicatorName} data is available for ${countryName}.</h2>`;
-      return;
-    }
-
-    // Prepare data for Plotly
-    const years = data.map(item => item.date).reverse();
-    const values = data.map(item => item.value).reverse();
+    // Wait for all fetches to complete
+    await Promise.all(promises);
 
     const plotData = [{
-      x: years,
-      y: values,
-      type: 'scatter',
-      mode: 'lines+markers',
-      name: `${countryName} ${indicatorName}`
+      type: 'pie',
+      labels: pieLabels,
+      values: pieValues,
+      textinfo: "label+percent",
+      insidetextorientation: "radial"
     }];
-
-    // The layout is now dynamic
+    
     const layout = {
-      title: `${countryName} - ${indicatorName}`,
-      xaxis: { title: 'Year' },
-      yaxis: { title: Y_AXIS_LABELS[indicator] } // Use our label map
+      title: `Latest ${currentIndicatorName} Comparison`
     };
 
-    Plotly.newPlot('plotly-chart', plotData, layout);
+    Plotly.newPlot('plotly-chart', plotData, layout, {responsive: true});
 
-  } catch (error) {
-    console.error('Error in updateChart:', error);
-    chartDiv.innerHTML = "<h2>Could not load chart. (Check console)</h2>";
+  // --- B: Line & Bar Chart Logic (Time-Series) ---
+  } else {
+    let plotData = []; // An array to hold all our country 'traces'
+    
+    const promises = selectedCountries.map(async (country) => {
+      const apiUrl = `http://127.0.0.1:5000/api/data/${currentIndicator}/${country.code}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      
+      if (data.length > 0) {
+        const years = data.map(item => item.date).reverse();
+        const values = data.map(item => item.value).reverse();
+
+        // Create one "trace" per country
+        const trace = {
+          x: years,
+          y: values,
+          type: currentChartType === 'line' ? 'scatter' : 'bar',
+          mode: currentChartType === 'line' ? 'lines+markers' : undefined,
+          name: country.name // This adds the legend
+        };
+        plotData.push(trace);
+      }
+    });
+
+    // Wait for all fetches to complete
+    await Promise.all(promises);
+
+    const layout = {
+      title: `${currentIndicatorName} Comparison`,
+      xaxis: { title: 'Year' },
+      yaxis: { title: Y_AXIS_LABELS[currentIndicator] },
+      barmode: 'group' // Groups bars side-by-side
+    };
+    
+    Plotly.newPlot('plotly-chart', plotData, layout, {responsive: true});
   }
 }
 
 // --- PART 4: EVENT LISTENERS ---
-// 1. D3 Map Click Listener
+
+// 1. D3 Map Setup and Click Listener
+const mapSvg = d3.select("#map").append("svg")
+  .attr("width", "100%")
+  .attr("height", "100%");
+
+const projection = d3.geoNaturalEarth1()
+  .scale(d3.min([window.innerWidth / 2.5 / Math.PI, window.innerHeight / 2.5 / Math.PI]) * 2.5)
+  .translate([window.innerWidth / 2, window.innerHeight / 2]);
+  
+const path = d3.geoPath().projection(projection);
+
 d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(data => {
-  svg.selectAll("path")
+  mapSvg.selectAll("path")
     .data(data.features)
     .enter()
     .append("path")
     .attr("class", "country")
     .attr("d", path)
-    .on("mouseover", function(event, d) {
-      // --- THIS IS THE TOOLTIP CODE ---
-      tooltip.style("opacity", 1)
-        .html(d.properties.name) // Show the country name
-        .style("left", (event.pageX + 10) + "px")
-        .style("top", (event.pageY - 28) + "px");
-      // --- END TOOLTIP CODE ---
-    })
-    .on("mouseout", function() {
-      // --- THIS HIDES THE TOOLTIP ---
-      tooltip.style("opacity", 0);
-      // --- END HIDE TOOLTIP CODE ---
-    })
+    .attr("id", (d) => `country-${d.id}`) // Give each country path an ID
+    .on("mouseover", function(event, d) { /* ... tooltip code ... */ })
+    .on("mouseout", function() { /* ... tooltip code ... */ })
     .on("click", function(event, d) {
-      // When a country is clicked:
-      // 1. Update the "current" country
-      currentCountryCode = d.id;
-      currentCountryName = d.properties.name;
       
-      // 2. Redraw the chart using the NEW country but the CURRENT indicator
-      updateChart(currentCountryCode, currentCountryName, currentIndicator, currentIndicatorName);
+      const countryCode = d.id;
+      const countryName = d.properties.name;
+      const countryPath = d3.select(this); // The <path> element
+
+      // Check if country is already selected
+      const selectedIndex = selectedCountries.findIndex(c => c.code === countryCode);
+
+      if (selectedIndex > -1) {
+        // --- UNSELECT ---
+        selectedCountries.splice(selectedIndex, 1); // Remove from array
+        countryPath.classed('country-selected', false); // Remove CSS class
+      } else {
+        // --- SELECT ---
+        selectedCountries.push({ code: countryCode, name: countryName }); // Add to array
+        countryPath.classed('country-selected', true); // Add CSS class
+      }
+      
+      // Update the chart
+      updateChart();
+      
+      // Show the panel if at least one country is selected
+      if (selectedCountries.length > 0) {
+        chartPanel.classList.add('visible');
+      } else {
+        chartPanel.classList.remove('visible');
+      }
     });
 });
 
-// 2. Dropdown Change Listener
-const indicatorSelect = document.getElementById('indicator-select');
-
+// 2. Indicator Dropdown Listener
 indicatorSelect.addEventListener('change', (event) => {
-  // When the dropdown is changed:
-  // 1. Update the "current" indicator
   currentIndicator = event.target.value;
   currentIndicatorName = event.target.options[event.target.selectedIndex].text;
-  
-  // 2. Redraw the chart using the CURRENT country but the NEW indicator
-  updateChart(currentCountryCode, currentCountryName, currentIndicator, currentIndicatorName);
+  updateChart(); // Redraw chart with new indicator
 });
 
+// 3. Chart Type Dropdown Listener (NEW)
+chartTypeSelect.addEventListener('change', (event) => {
+  currentChartType = event.target.value;
+  updateChart(); // Redraw chart with new type
+});
+
+// 4. Clear Button Listener (NEW)
+clearButton.addEventListener('click', () => {
+  selectedCountries = []; // Empty the array
+  mapSvg.selectAll('.country-selected').classed('country-selected', false); // Clear map styles
+  updateChart(); // This will hide the panel
+});
+
+// 5. Close Panel Button Listener
+closePanelButton.addEventListener('click', () => {
+  chartPanel.classList.remove('visible');
+});
 
 // --- PART 5: INITIAL PAGE LOAD ---
-// When the page first loads, draw the default chart (India, GDP)
-updateChart(currentCountryCode, currentCountryName, currentIndicator, currentIndicatorName);
+console.log("Dashboard ready. Click countries to compare them.");

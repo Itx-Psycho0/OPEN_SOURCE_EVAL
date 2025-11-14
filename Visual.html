@@ -3,44 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Economic Trends Dashboard</title>
+  <title>Global Economic Trends</title>
   
   <link rel="stylesheet" href="styles.css">
-  
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>Global Economic Trends Dashboard</h1>
-  </header>
+
+  <div id="map"></div>
   
-  <main>
-    <div id="map"></div>
-    
-    <div class="sidebar">
-          <h2>Macroeconomic Indicators</h2>
-          
-          <div class="indicator">
-            <label for="indicator-select">Select Indicator:</label>
-            <select id="indicator-select">
-              <option value="gdp" selected>GDP (Current US$)</option>
-              <option value="inflation">Inflation (Annual %)</option>
-              <option value="unemployment">Unemployment (%)</option>
-            </select>
-          </div>
-
-          <div id="plotly-chart"></div>
-
-        </div>
-  </main>
-
   <div id="tooltip" class="tooltip"></div>
 
-  <footer>
-    Data provided by World GeoJSON project. Map visualization powered by D3.js.
-  </footer>
+<div class="controls-container">
+    <label for="indicator-select">Indicator:</label>
+    <select id="indicator-select">
+      <option value="gdp" selected>GDP</option>
+      <option value="inflation">Inflation</option>
+      <option value="unemployment">Unemployment</option>
+    </select>
+    
+    <label for="chart-type-select">Chart:</label>
+    <select id="chart-type-select">
+      <option value="line" selected>Line Graph</option>
+      <option value="bar">Bar Graph</option>
+      <option value="pie">Pie Chart (Latest Year)</option>
+    </select>
 
-  <script src="https://cdn.plot.ly/plotly-3.2.0.min.js"></script>
+    <button id="clear-selection-btn">Clear Selections</button>
+  </div>
+
+  <div id="chart-panel">
+    <button id="close-panel-btn">X</button>
+    
+    <div id="plotly-chart"></div>
+  </div>
+
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="visual.js"></script>
   
