@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Economic Trends Infographic</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <link rel="stylesheet" href="index-styles.css">
+</head>
+<body class="bg-gray-100 text-[#051923]">
+
+    <main class="container mx-auto max-w-5xl p-4 md:p-8">
+
+        <header class="text-center mb-12 mt-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#003554] mb-4">Visualizing the Global Economy</h1>
+            <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                Understanding the world's economy means tracking key indicators. This report visualizes complex data on growth, inflation, and labor to reveal the stories hidden within the numbers.
+            </p>
+        </header>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-6">Global Economic Hotspots</h2>
+            <div id="map" class="w-full h-96 md:h-[500px] rounded-md z-0"></div>
+            <p class="text-md text-gray-700 mt-6">
+                <strong class="text-gray-900">Key Takeaway:</strong> This interactive map highlights the key economies featured in this report. You can pan, zoom, and click on the markers to see specific data points, providing a geographical context for the charts below.
+            </p>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-2xl font-bold text-center text-[#003554] mb-4">Key Metric: Global GDP</h2>
+            <div class="text-center">
+                <div class="text-6xl md:text-7xl font-extrabold text-[#0582CA]">
+                    ~$96.5 Trillion
+                </div>
+                <p class="text-lg text-gray-600 mt-2">
+                    (Recent Nominal Global GDP)
+                </p>
+            </div>
+            <p class="text-md text-gray-700 mt-6 max-w-2xl mx-auto text-center">
+                This staggering number represents the total economic output of the world in a single year. Visualizing how this wealth is distributed and how it changes is crucial for understanding our interconnected world.
+            </p>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-3">The Titans: Comparing Economic Giants</h2>
+            <p class="text-md text-gray-700 mb-6">
+                Gross Domestic Product (GDP) is the primary measure of an economy's size. A bar chart is the most effective way to compare these values across different countries, clearly showing the relative scale of their economic output in a recent year.
+            </p>
+            <div class="relative w-full max-w-2xl mx-auto h-80 md:h-96">
+                <canvas id="gdpBarChart"></canvas>
+            </div>
+            <p class="text-md text-gray-700 mt-6">
+                <strong class="text-gray-900">Key Takeaway:</strong> The visualization immediately highlights the dominant economic scales of the United States and China, followed by other major economies like Germany and India, providing a clear snapshot of the global economic landscape.
+            </p>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-3">The Ebb and Flow: Tracking Inflation</h2>
+            <p class="text-md text-gray-700 mb-6">
+                Inflation, the rate at which prices rise, directly impacts consumers and policy. A line chart is the perfect tool to track this indicator's "change over time," allowing us to compare the inflationary journeys of different nations side-by-side.
+            </p>
+            <div class="relative w-full max-w-2xl mx-auto h-80 md:h-96">
+                <canvas id="inflationLineChart"></canvas>
+            </div>
+            <p class="text-md text-gray-700 mt-6">
+                <strong class="text-gray-900">Key Takeaway:</strong> This chart reveals the volatility and divergence in inflation paths. We can clearly see some countries experiencing stable periods while others face sharp spikes, demonstrating different economic pressures.
+            </p>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-3">The Labor Landscape: Unemployment Rates</h2>
+            <p class="text-md text-gray-700 mb-6">
+                The unemployment rate is a critical indicator of an economy's health and its social well-being. By using a horizontal bar chart, we can create an ordered ranking that clearly compares the labor market conditions across these nations.
+            </p>
+            <div class="relative w-full max-w-2xl mx-auto h-80 md:h-96">
+                <canvas id="unemploymentBarChart"></canvas>
+            </div>
+            <p class="text-md text-gray-700 mt-6">
+                <strong class="text-gray-900">Key Takeaway:</strong> The horizontal layout provides a clean, ranked list, making it easy to identify which countries have lower or higher rates of unemployment in their labor force, a key factor for domestic stability.
+            </Ssection>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-3">Relationships: Inflation vs. Unemployment</h2>
+            <p class="text-md text-gray-700 mb-6">
+                Do different indicators move together? A scatter plot helps us "reveal relationships" by plotting two variables against each other. Here, we look at 10 years of data for a single country (USA) to see if a pattern emerges between inflation and unemployment.
+            </p>
+            <div class="relative w-full max-w-2xl mx-auto h-80 md:h-96">
+                <canvas id="scatterPlot"></canvas>
+            </div>
+            <p class="text-md text-gray-700 mt-6">
+                <strong class="text-gray-900">Key Takeaway:</strong> Each point represents a year. This type of visualization allows analysts to spot potential correlations, clusters, or outliers that a simple line chart would miss, prompting deeper investigation into economic theory.
+            </p>
+        </section>
+
+        <footer class="text-center mt-12 mb-8">
+            <p class="text-lg font-bold text-[#003554]">Data visualization turns raw numbers into a clear story.</p>
+            <p class="text-md text-gray-700">Insights derived from World Bank Open Data.</p>
+        </footer>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
