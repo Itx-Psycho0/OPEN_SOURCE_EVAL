@@ -3,13 +3,19 @@
 
 # 📈 Global Economic Trends Dashboard
 
-A data visualization dashboard built to track and compare macroeconomic indicators (GDP, inflation, and unemployment) across various countries. 1
+A data visualization dashboard built to track and compare macroeconomic indicators (GDP, inflation, and unemployment) across various countries.
 
 ## 📖 About The Project
 
 This project was built to solve the challenge of visualizing complex and often siloed macroeconomic data. It provides a clean, interactive interface for users to select countries and specific indicators, rendering comparative charts to show economic trends over time.
 
 The primary data source is the **World Bank Open Data API**2, providing reliable, standardized data from across the globe.
+
+**note**
+```
+please go ahead with the installation guidelines and not with the github pages because this is not a static project
+this is a dynamic project and thus go ahead with the  local installation guidelines
+```
 
 ## ✨ Features
 
