@@ -1,0 +1,31 @@
+2025-11-15 02:40:01,085 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.20.18.107:5000
+2025-11-15 02:40:01,085 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-15 02:40:06,937 [INFO] 127.0.0.1 - - [15/Nov/2025 02:40:06] "GET / HTTP/1.1" 200 -
+2025-11-15 02:40:06,971 [INFO] 127.0.0.1 - - [15/Nov/2025 02:40:06] "GET /index-styles.css HTTP/1.1" 200 -
+2025-11-15 02:40:06,983 [INFO] 127.0.0.1 - - [15/Nov/2025 02:40:06] "GET /script.js HTTP/1.1" 200 -
+2025-11-15 02:41:03,423 [INFO] 127.0.0.1 - - [15/Nov/2025 02:41:03] "OPTIONS /predict HTTP/1.1" 200 -
+2025-11-15 02:41:03,428 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 02:41:04,697 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 02:41:06,552 [INFO] 127.0.0.1 - - [15/Nov/2025 02:41:06] "POST /predict HTTP/1.1" 200 -
+2025-11-15 02:41:06,559 [INFO] 127.0.0.1 - - [15/Nov/2025 02:41:06] "POST /predict HTTP/1.1" 200 -
+2025-11-15 02:42:43,378 [INFO] 127.0.0.1 - - [15/Nov/2025 02:42:43] "OPTIONS /predict HTTP/1.1" 200 -
+2025-11-15 02:42:43,383 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 02:42:43,497 [INFO] 127.0.0.1 - - [15/Nov/2025 02:42:43] "POST /predict HTTP/1.1" 200 -
+2025-11-15 02:44:40,614 [INFO] 127.0.0.1 - - [15/Nov/2025 02:44:40] "OPTIONS /predict HTTP/1.1" 200 -
+2025-11-15 02:44:40,620 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 02:44:40,713 [INFO] 127.0.0.1 - - [15/Nov/2025 02:44:40] "POST /predict HTTP/1.1" 200 -
+2025-11-15 02:54:25,904 [INFO] 127.0.0.1 - - [15/Nov/2025 02:54:25] "OPTIONS /predict HTTP/1.1" 200 -
+2025-11-15 02:54:25,911 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 21354105000000, 'GDP_lag_2': 21354105000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 02:54:26,049 [INFO] 127.0.0.1 - - [15/Nov/2025 02:54:26] "POST /predict HTTP/1.1" 200 -
+2025-11-15 03:45:51,423 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 03:47:00,203 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.20.18.107:5000
+2025-11-15 03:47:00,203 [INFO] [33mPress CTRL+C to quit[0m
+2025-11-15 03:47:41,428 [INFO] 127.0.0.1 - - [15/Nov/2025 03:47:41] "OPTIONS /predict HTTP/1.1" 200 -
+2025-11-15 03:47:41,436 [INFO] [predict] Incoming request from 127.0.0.1: {'country_name': 'United States', 'prediction_year': 2023, 'gdp_lags': {'GDP_lag_1': 26006893000000, 'GDP_lag_2': 23681171000000, 'GDP_lag_3': 21354105000000}}
+2025-11-15 03:47:44,947 [INFO] 127.0.0.1 - - [15/Nov/2025 03:47:44] "POST /predict HTTP/1.1" 200 -

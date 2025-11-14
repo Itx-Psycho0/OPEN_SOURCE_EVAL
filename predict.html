@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDP Prediction Tool</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="index-styles.css">
+</head>
+<body class="bg-gray-100 text-[#051923]">
+
+    <main class="container mx-auto max-w-2xl p-4 md:p-8">
+
+        <header class="text-center mb-12 mt-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#003554] mb-4">GDP Prediction Tool</h1>
+            <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+                Use our machine learning model to forecast the next year's GDP based on historical data.
+            </p>
+            <div class="mt-6">
+                <a href="index.html" class="text-lg text-[#0582CA] hover:underline">&larr; Back to Infographic</a>
+            </div>
+        </header>
+
+        <section class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8">
+            <h2 class="text-2xl font-bold text-[#003554] mb-6">Enter Historical Data</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label for="country-select" class="block text-sm font-medium text-gray-700">Select Country:</label>
+                    <select id="country-select" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#0582CA] focus:border-[#0582CA]">
+                        <option value="United States">United States</option>
+                        <option value="China">China</option>
+                        <option value="Germany">Germany</option>
+                        <option value="India">India</option>
+                        <option value="Japan">Japan</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="France">France</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Russian Federation">Russian Federation</option>
+                        <option value="South Africa">South Africa</option>
+                        <option value="Mexico">Mexico</option>
+                        <option value="Korea, Rep.">South Korea</option>
+                        <option value="Indonesia">Indonesia</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="gdp-lag1" class="block text-sm font-medium text-gray-700">GDP (Latest Year, e.g., 2022):</label>
+                    <input type="number" id="gdp-lag1" placeholder="e.g., 26006893000000" step="any" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#0582CA] focus:border-[#0582CA]">
+                </div>
+                
+                <div>
+                    <label for="gdp-lag2" class="block text-sm font-medium text-gray-700">GDP (Previous Year, e.g., 2021):</label>
+                    <input type="number" id="gdp-lag2" placeholder="e.g., 23681171000000" step="any" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#0582CA] focus:border-[#0582CA]">
+                </div>
+                
+                <div>
+                    <label for="gdp-lag3" class="block text-sm font-medium text-gray-700">GDP (Two Years Prior, e.g., 2020):</label>
+                    <input type="number" id="gdp-lag3" placeholder="e.g., 21354105000000" step="any" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#0582CA] focus:border-[#0582CA]">
+                </div>
+                
+                <button id="predict-button" class="w-full bg-[#0582CA] text-white font-bold py-3 px-4 rounded-md hover:bg-[#006494] transition duration-200">
+                    Predict 2023 GDP
+                </button>
+            </div>
+        </section>
+
+        <section id="results-section" class="bg-white rounded-lg shadow-md p-6 md:p-8 mb-8 hidden">
+            <h2 class="text-2xl font-bold text-[#003554] mb-4">Prediction Result</h2>
+            <div id="error-message" class="text-red-600 mb-4"></div>
+            <div id="success-message">
+                <p class="text-lg text-gray-700">
+                    The predicted GDP for <strong id="predicted-country" class="text-[#051923]"></strong> 
+                    in <strong id="predicted-year" class="text-[#051923]"></strong> is:
+                </p>
+                <div class="text-5xl font-extrabold text-[#0582CA] mt-2" id="predicted-gdp">
+                    </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="predict.js" defer></script>
+</body>
+</html>
