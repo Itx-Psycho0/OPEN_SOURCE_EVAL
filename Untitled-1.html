@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wikipedia Chatbot</title>
+    <title>Pratham Chatbot</title>
 
     <style>
         body {
@@ -106,7 +106,7 @@
                 let page = pages[Object.keys(pages)[0]];
 
                 if (!page.extract || page.extract.trim() === "") {
-                    return "I'm learning, will respond soon.";
+                    return "I don't have data related to this ,try typing something similar.";
                 }
 
                 if (page.extract.toLowerCase().includes("may refer to")) {
@@ -116,7 +116,7 @@
                 let sentences = page.extract.split(". ");
                 let bullets = sentences.map(s => "• " + s.trim()).join("\n\n");
 
-                return `**${page.title}**\n\n${bullets}`;
+                return `Great !! here's information on: ${page.title}\n\n${bullets}`;
 
             } catch {
                 return "Sorry, couldn't answer right now.";
@@ -196,6 +196,7 @@
 
 </body>
 </html>
+
 
 
 
