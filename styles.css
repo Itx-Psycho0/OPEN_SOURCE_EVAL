@@ -1,0 +1,17 @@
+/* Ensure HTML and BODY take up full viewport height */
+html, body {
+    height: 100%;
+}
+
+/* Custom CSS for map container dimensions and border */
+/* Setting height: 100% here is REQUIRED for Leaflet to display properly */
+#map {
+    height: 100%; 
+    width: 100%;
+    border-radius: 0.5rem; /* rounded corners */
+}
+
+/* Custom CSS for the information panel transition */
+.info-panel {
+    transition: all 0.3s ease-in-out;
+}

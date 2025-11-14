@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive World Map with D3.js</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    #map {
+      width: 60%;
+      height: 550px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .country {
+      fill: #ccc;
+      stroke: #fff;
+      stroke-width: 0.5px;
+    }
+    .country:hover {
+      fill: #4edcff;
+    }
+    .tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <h1>Global Economic Trends Dashboard</h1>
+  <div id="map"></div>
+  <div id="tooltip" class="tooltip"></div>
+  <script src="script.js"></script>
+</body>
+</html>
