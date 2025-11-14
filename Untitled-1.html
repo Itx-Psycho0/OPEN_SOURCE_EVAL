@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedia Chatbot</title>
+
+    <style>
+        body {
+            background: #0d0d0d;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+
+        #chat-container {
+            width: 450px;
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 0px 10px rgba(255,255,255,0.1);
+        }
+
+        #messages {
+            height: 420px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .msg {
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+
+        .user {
+            text-align: right;
+            color: #5db4ff;
+        }
+
+        .bot {
+            text-align: left;
+            color: #ff9e7b;
+        }
+
+        #input-box {
+            width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+        }
+
+        #send-btn {
+            width: 18%;
+            padding: 10px;
+            background: #4099ff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #send-btn:hover {
+            background: #1c70d9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="chat-container">
+        <div id="messages"></div>
+
+        <input id="input-box" type="text" placeholder="Ask anything about any country... (type 'stop' to cancel)">
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script>
+        let stopTyping = false;
+
+        async function queryWikipedia(query) {
+            try {
+                let searchUrl = `https://en.wikipedia.org/w/api.php?origin=*&action=query&list=search&format=json&srsearch=${encodeURIComponent(query)}`;
+                let searchResponse = await fetch(searchUrl);
+                let searchData = await searchResponse.json();
+
+                if (searchData.query.search.length === 0) {
+                    return "I'm learning, will respond soon.";
+                }
+
+                let pageTitle = searchData.query.search[0].title;
+
+                let extractUrl = 
+                    `https://en.wikipedia.org/w/api.php?origin=*&action=query&prop=extracts&exintro=true&explaintext=true&format=json&titles=${encodeURIComponent(pageTitle)}`;
+
+                let extractResponse = await fetch(extractUrl);
+                let extractData = await extractResponse.json();
+
+                let pages = extractData.query.pages;
+                let page = pages[Object.keys(pages)[0]];
+
+                if (!page.extract || page.extract.trim() === "") {
+                    return "I'm learning, will respond soon.";
+                }
+
+                if (page.extract.toLowerCase().includes("may refer to")) {
+                    return "Sorry, couldn't answer right now.";
+                }
+
+                let sentences = page.extract.split(". ");
+                let bullets = sentences.map(s => "• " + s.trim()).join("\n\n");
+
+                return `**${page.title}**\n\n${bullets}`;
+
+            } catch {
+                return "Sorry, couldn't answer right now.";
+            }
+        }
+
+        const messagesDiv = document.getElementById("messages");
+        const input = document.getElementById("input-box");
+        const sendBtn = document.getElementById("send-btn");
+
+        function addMessage(text, sender, typing = false) {
+            let div = document.createElement("div");
+            div.className = "msg " + sender;
+
+            if (!typing) {
+                div.textContent = text;
+            }
+
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            return div;
+        }
+
+        async function typeText(div, text) {
+            div.textContent = "";
+            stopTyping = false;
+
+            for (let i = 0; i < text.length; i++) {
+                if (stopTyping) return;
+                div.textContent += text[i];
+                await new Promise(res => setTimeout(res, 15));
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }
+        }
+
+        async function sendMessage() {
+            let question = input.value.trim();
+            if (!question) return;
+
+            const q = question.toLowerCase();
+
+            // STOP typing command
+            if (q === "stop") {
+                stopTyping = true;
+                addMessage("⛔ Stopped typing.", "bot");
+                input.value = "";
+                return;
+            }
+
+            // CUSTOM GREETING RESPONSES
+            const greetings = ["hi", "hii", "hello", "hey"];
+            if (greetings.includes(q)) {
+                addMessage(question, "user");
+                let botDiv = addMessage("...", "bot", true);
+                typeText(botDiv, "Hii, this is Pratham — your AI helper in learning.");
+                input.value = "";
+                return;
+            }
+
+            addMessage(question, "user");
+            input.value = "";
+
+            let typingDiv = addMessage("...", "bot", true);
+
+            let answer = await queryWikipedia(question);
+
+            typeText(typingDiv, answer);
+        }
+
+        sendBtn.onclick = sendMessage;
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") sendMessage();
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
