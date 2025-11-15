@@ -11,10 +11,12 @@ This project was built to solve the challenge of visualizing complex and often s
 
 The primary data source is the **World Bank Open Data API**2, providing reliable, standardized data from across the globe.
 
-**note**
+**note and Important instructions :- **
 ```
-please go ahead with the installation guidelines and not with the github pages because this is not a static project
-this is a dynamic project and thus go ahead with the  local installation guidelines
+ - please go ahead with the installation guidelines and not with the github pages because this is not a static project
+    this is a dynamic project and thus go ahead with the  local installation guidelines
+ - please terminate the predict_app server or the app server before switching to the other server and vice versa for each server
+    to work properly
 ```
 
 ## ✨ Features
