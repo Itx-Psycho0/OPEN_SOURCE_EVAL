@@ -81,7 +81,7 @@ To get a local copy up and running, follow these simple steps.
     
     ```
     install the necessary npm packages with npm install
-    pip install requirements.txt
+    pip install -r requirements.txt
     create venv, install packages) and start predict_app.py so you can test the UI
     run app.py and predict_app.py to start the server
     ```
