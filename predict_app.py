@@ -3,13 +3,15 @@ from ml_prediction.predict_gdp import predict_gdp_for_country
 from flask_cors import CORS
 import os
 import logging
+import tempfile
 
-# Configure logging to file and console for easier debugging
+# Configure logging to file (in OS temp dir) and console for easier debugging
+LOG_FILE_PATH = os.path.join(tempfile.gettempdir(), 'open_source_eval_server.log')
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
-        logging.FileHandler('server.log'),
+        logging.FileHandler(LOG_FILE_PATH),
         logging.StreamHandler()
     ]
 )
@@ -75,5 +77,6 @@ def predict():
 if __name__ == '__main__':
     # Add a simple print statement to show it's running
     print("Starting Flask server on http://127.0.0.1:5000")
+    print(f"Server log path: {LOG_FILE_PATH}")
     print("Press CTRL+C to stop the server.")
     app.run(host='0.0.0.0', port=5000)
